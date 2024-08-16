@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Owcounter
@@ -8,6 +9,14 @@ namespace Owcounter
         public LogWindow()
         {
             InitializeComponent();
+            DisplayVersion();
+        }
+
+        private void DisplayVersion()
+        {
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            string versionString = $"v{version.Major}.{version.Minor}.{version.Build}";
+            this.Text = $"OwcounterCompanion Log - {versionString}";
         }
 
         public void AddLog(string message)
