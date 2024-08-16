@@ -1,7 +1,7 @@
 ﻿using Owcounter.Authentication;
 using Owcounter.Services;
 using Owcounter.UI;
-using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,16 +13,20 @@ namespace Owcounter
         private readonly ApiService apiService;
         private readonly ScreenshotMonitoringService monitoringService;
         private readonly KeycloakAuth keycloakAuth;
-        private readonly LogWindow logWindow;
+        private readonly LoggerService loggerService;
+        private LogWindow logWindow;
 
         private const string ApiBaseUrl = "https://api.owcounter.com";
         private const string KeycloakUrl = "https://id.owcounter.com";
         private const string Realm = "owcounter";
         private const string TokenFileName = "owcounter_oauth_token.json";
+        private const string LogFileName = "OwcounterCompanion.log";
 
         public TrayApplicationContext()
         {
-            logWindow = new LogWindow();
+            string logFilePath = Path.Combine(Application.StartupPath, LogFileName);
+            loggerService = new LoggerService(logFilePath);
+
             keycloakAuth = new KeycloakAuth(KeycloakUrl, Realm);
             apiService = new ApiService(ApiBaseUrl, keycloakAuth, TokenFileName, Log);
             monitoringService = new ScreenshotMonitoringService(apiService);
@@ -68,7 +72,7 @@ namespace Owcounter
                     }
                     else
                     {
-                        Log("Login failed. Please try again.");
+                        MessageBox.Show("Login failed. Please try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         ShowLoginForm();
                     }
                 });
@@ -81,6 +85,11 @@ namespace Owcounter
 
         private void OpenLog()
         {
+            if (logWindow == null || logWindow.IsDisposed)
+            {
+                logWindow = new LogWindow(Path.Combine(Application.StartupPath, LogFileName));
+            }
+
             if (!logWindow.Visible)
             {
                 logWindow.Show();
@@ -105,14 +114,7 @@ namespace Owcounter
 
         private void Log(string message)
         {
-            if (logWindow.InvokeRequired)
-            {
-                logWindow.Invoke(new Action<string>(Log), message);
-            }
-            else
-            {
-                logWindow.AddLog(message);
-            }
+            loggerService.Log(message);
         }
 
         protected override void Dispose(bool disposing)
@@ -121,7 +123,8 @@ namespace Owcounter
             {
                 trayIcon.Dispose();
                 monitoringService.Dispose();
-                logWindow.Dispose();
+                loggerService.Dispose();
+                logWindow?.Dispose();
             }
             base.Dispose(disposing);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -6,10 +7,19 @@ namespace Owcounter
 {
     public partial class LogWindow : Form
     {
-        public LogWindow()
+        private readonly string logFilePath;
+        private System.Windows.Forms.Timer updateTimer;
+
+        public LogWindow(string logFilePath)
         {
             InitializeComponent();
             DisplayVersion();
+            this.logFilePath = logFilePath;
+
+            updateTimer = new System.Windows.Forms.Timer();
+            updateTimer.Interval = 1000; // Update every second
+            updateTimer.Tick += UpdateTimer_Tick;
+            updateTimer.Start();
         }
 
         private void DisplayVersion()
@@ -19,16 +29,22 @@ namespace Owcounter
             this.Text = $"OwcounterCompanion Log - {versionString}";
         }
 
-        public void AddLog(string message)
+        private void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            if (InvokeRequired)
+            if (File.Exists(logFilePath))
             {
-                Invoke(new Action<string>(AddLog), message);
-                return;
+                try
+                {
+                    string[] lines = File.ReadAllLines(logFilePath);
+                    logTextBox.Lines = lines;
+                    logTextBox.SelectionStart = logTextBox.Text.Length;
+                    logTextBox.ScrollToCaret();
+                }
+                catch (IOException)
+                {
+                    // File might be locked, we'll try again on the next tick
+                }
             }
-
-            logTextBox.AppendText($"[{DateTime.Now}] {message}{Environment.NewLine}");
-            logTextBox.ScrollToCaret();
         }
 
         private void LogWindow_FormClosing(object sender, FormClosingEventArgs e)
