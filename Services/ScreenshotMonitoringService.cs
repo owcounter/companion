@@ -13,8 +13,6 @@ namespace Owcounter.Services
         private readonly ApiService apiService;
         private readonly SynchronizationContext synchronizationContext;
 
-        public event Action<string>? OnLog;
-
         public ScreenshotMonitoringService(ApiService apiService)
         {
             this.apiService = apiService;
@@ -52,16 +50,9 @@ namespace Owcounter.Services
                 }
                 catch (Exception ex)
                 {
-                    Log($"Error processing screenshot: {ex.Message}");
+                    Logger.Log($"Error processing screenshot: {ex.Message}");
                 }
-
-
             }, null);
-        }
-
-        private void Log(string message)
-        {
-            OnLog?.Invoke(message);
         }
 
         public void Dispose()

@@ -1,7 +1,5 @@
 ﻿using Owcounter.Authentication;
 using Owcounter.Services;
-using Owcounter.UI;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,22 +11,16 @@ namespace Owcounter
         private readonly ApiService apiService;
         private readonly ScreenshotMonitoringService monitoringService;
         private readonly KeycloakAuth keycloakAuth;
-        private readonly LoggerService loggerService;
-        private LogWindow logWindow;
 
         private const string ApiBaseUrl = "https://api.owcounter.com";
         private const string KeycloakUrl = "https://id.owcounter.com";
         private const string Realm = "owcounter";
         private const string TokenFileName = "owcounter_oauth_token.json";
-        private const string LogFileName = "OwcounterCompanion.log";
 
         public TrayApplicationContext()
         {
-            string logFilePath = Path.Combine(Application.StartupPath, LogFileName);
-            loggerService = new LoggerService(logFilePath);
-
             keycloakAuth = new KeycloakAuth(KeycloakUrl, Realm);
-            apiService = new ApiService(ApiBaseUrl, keycloakAuth, TokenFileName, Log);
+            apiService = new ApiService(ApiBaseUrl, keycloakAuth, TokenFileName);
             monitoringService = new ScreenshotMonitoringService(apiService);
             trayIcon = new TrayIcon();
 
@@ -37,11 +29,8 @@ namespace Owcounter
 
         private async void InitializeApplication()
         {
-            trayIcon.OnOpenLog += (s, e) => OpenLog();
             trayIcon.OnLogout += (s, e) => Logout();
             trayIcon.OnExit += (s, e) => Exit();
-
-            monitoringService.OnLog += Log;
 
             if (await apiService.LoadAndValidateTokens())
             {
@@ -56,7 +45,7 @@ namespace Owcounter
         private void StartMonitoring()
         {
             monitoringService.StartMonitoring();
-            Log("Started monitoring Overwatch screenshots folder.");
+            Logger.Log("Started monitoring Overwatch screenshots folder.");
         }
 
         private void ShowLoginForm()
@@ -83,23 +72,6 @@ namespace Owcounter
             }
         }
 
-        private void OpenLog()
-        {
-            if (logWindow == null || logWindow.IsDisposed)
-            {
-                logWindow = new LogWindow(Path.Combine(Application.StartupPath, LogFileName));
-            }
-
-            if (!logWindow.Visible)
-            {
-                logWindow.Show();
-            }
-            else
-            {
-                logWindow.BringToFront();
-            }
-        }
-
         private async void Logout()
         {
             await apiService.Logout();
@@ -110,23 +82,6 @@ namespace Owcounter
         private void Exit()
         {
             Application.Exit();
-        }
-
-        private void Log(string message)
-        {
-            loggerService.Log(message);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                trayIcon.Dispose();
-                monitoringService.Dispose();
-                loggerService.Dispose();
-                logWindow?.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

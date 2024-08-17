@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Owcounter.UI
+namespace Owcounter
 {
     public class TrayIcon : IDisposable
     {

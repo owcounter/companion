@@ -14,14 +14,12 @@ namespace Owcounter.Services
         private readonly string tokenFileName;
         private string? accessToken;
         private string? refreshToken;
-        private readonly Action<string> log;
 
-        public ApiService(string apiBaseUrl, KeycloakAuth keycloakAuth, string tokenFileName, Action<string> log)
+        public ApiService(string apiBaseUrl, KeycloakAuth keycloakAuth, string tokenFileName)
         {
             httpClient = new HttpClient { BaseAddress = new Uri(apiBaseUrl) };
             this.keycloakAuth = keycloakAuth;
             this.tokenFileName = tokenFileName;
-            this.log = log;
         }
 
         public async Task<bool> LoadAndValidateTokens()
@@ -44,7 +42,7 @@ namespace Owcounter.Services
             }
             catch (Exception ex)
             {
-                log($"Error loading or validating tokens: {ex.Message}");
+                Logger.Log($"Error loading or validating tokens: {ex.Message}");
             }
 
             DeleteTokenFile();
@@ -65,7 +63,7 @@ namespace Owcounter.Services
             }
             catch (Exception ex)
             {
-                log($"Token validation failed: {ex.Message}");
+                Logger.Log($"Token validation failed: {ex.Message}");
                 return false;
             }
         }
@@ -82,13 +80,13 @@ namespace Owcounter.Services
                 refreshToken = tokenResponse.refresh_token;
 
                 await System.IO.File.WriteAllTextAsync(tokenFileName, JsonSerializer.Serialize(tokenResponse));
-                log("Token refreshed successfully");
+                Logger.Log("Token refreshed successfully");
 
                 return accessToken != null && await ValidateToken(accessToken);
             }
             catch (Exception ex)
             {
-                log($"Failed to refresh token: {ex.Message}");
+                Logger.Log($"Failed to refresh token: {ex.Message}");
                 return false;
             }
         }
@@ -113,17 +111,17 @@ namespace Owcounter.Services
                     var response = await apiCall();
                     if (response.IsSuccessStatusCode)
                     {
-                        log("API request processed successfully");
+                        Logger.Log("API request processed successfully");
                         return true;
                     }
 
                     var errorContent = await response.Content.ReadAsStringAsync();
-                    log($"Error processing API request. Status code: {response.StatusCode}. Content: {errorContent}");
+                    Logger.Log($"Error processing API request. Status code: {response.StatusCode}. Content: {errorContent}");
 
                     var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(errorContent);
                     if (errorResponse?.code == 2 && errorResponse?.message?.Contains("ERR_NO_WEBSOCKET_OPENED") == true)
                     {
-                        log("Please refresh your Owcounter website to reconnect the WebSocket.");
+                        Logger.Log("Please refresh your Owcounter website to reconnect the WebSocket.");
                         return false;
                     }
 
@@ -137,12 +135,12 @@ namespace Owcounter.Services
                 }
                 catch (Exception e)
                 {
-                    log($"HTTP Request failed: {e.Message}");
+                    Logger.Log($"HTTP Request failed: {e.Message}");
                 }
 
                 if (i == maxRetries)
                 {
-                    log("Max retries reached. Please check your connection or log in again.");
+                    Logger.Log("Max retries reached. Please check your connection or log in again.");
                     return false;
                 }
             }
@@ -155,7 +153,7 @@ namespace Owcounter.Services
             if (System.IO.File.Exists(tokenFileName))
             {
                 System.IO.File.Delete(tokenFileName);
-                log("Invalid tokens deleted. Please log in again.");
+                Logger.Log("Invalid tokens deleted. Please log in again.");
             }
         }
 
@@ -165,11 +163,11 @@ namespace Owcounter.Services
             {
                 if (!string.IsNullOrEmpty(accessToken))
                     await keycloakAuth.RevokeToken(accessToken);
-                log("Logged out successfully");
+                Logger.Log("Logged out successfully");
             }
             catch (Exception ex)
             {
-                log($"Error during logout: {ex.Message}");
+                Logger.Log($"Error during logout: {ex.Message}");
             }
             finally
             {
