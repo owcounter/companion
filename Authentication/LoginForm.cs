@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Owcounter.Authentication;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using Owcounter.Authentication;
 
 namespace Owcounter
 {
@@ -35,8 +36,18 @@ namespace Owcounter
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Login failed: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Login failed: {ex.Message}\n\nPlease make sure you're using the correct credentials for your OWCOUNTER account.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void btnSignUp_Click(object sender, EventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("https://owcounter.com/signup") { UseShellExecute = true });
+        }
+
+        private void chkShowPassword_CheckedChanged(object sender, EventArgs e)
+        {
+            txtPassword.PasswordChar = chkShowPassword.Checked ? '\0' : '•';
         }
     }
 }

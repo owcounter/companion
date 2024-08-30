@@ -1,5 +1,7 @@
 ﻿using Owcounter.Authentication;
 using Owcounter.Services;
+using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,6 +18,7 @@ namespace Owcounter
         private const string KeycloakUrl = "https://id.owcounter.com";
         private const string Realm = "owcounter";
         private const string TokenFileName = "owcounter_oauth_token.json";
+        private const string DashboardUrl = "https://owcounter.com/dashboard";
 
         public TrayApplicationContext()
         {
@@ -29,6 +32,8 @@ namespace Owcounter
 
         private async void InitializeApplication()
         {
+            trayIcon.OnOpenDashboard += OpenDashboard;
+            trayIcon.OnOpenLog += OpenLog;
             trayIcon.OnLogout += (s, e) => Logout();
             trayIcon.OnExit += (s, e) => Exit();
 
@@ -46,17 +51,22 @@ namespace Owcounter
         {
             monitoringService.StartMonitoring();
             Logger.Log("Started monitoring Overwatch screenshots folder.");
+            trayIcon.SetToolTip("OWCOUNTER Companion - Monitoring");
+            trayIcon.ShowNotification("OWCOUNTER Companion", "Monitoring started. Open your dashboard for real-time insights!");
         }
 
         private void ShowLoginForm()
         {
             var loginForm = new LoginForm();
-            if (loginForm.ShowDialog() == DialogResult.OK)
+            DialogResult result = loginForm.ShowDialog();
+
+            if (result == DialogResult.OK)
             {
                 Task.Run(async () =>
                 {
                     if (await apiService.LoadAndValidateTokens())
                     {
+                        ShowWelcomeMessage();
                         StartMonitoring();
                     }
                     else
@@ -68,20 +78,55 @@ namespace Owcounter
             }
             else
             {
-                Application.Exit();
+                // User closed the form without logging in
+                Exit();
             }
+        }
+
+        private void ShowWelcomeMessage()
+        {
+            MessageBox.Show(
+                "Welcome to OWCOUNTER Companion!\n\n" +
+                "The app is now running in the background and will automatically upload screenshots.\n" +
+                "Open your OWCOUNTER dashboard to view real-time insights during gameplay.\n\n" +
+                "Right-click the tray icon for more options.",
+                "OWCOUNTER Companion",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
         }
 
         private async void Logout()
         {
             await apiService.Logout();
             monitoringService.Dispose();
+            trayIcon.SetToolTip("OWCOUNTER Companion - Not logged in");
+            trayIcon.ShowNotification("OWCOUNTER Companion", "Logged out successfully.");
             ShowLoginForm();
         }
 
         private void Exit()
         {
-            Application.Exit();
+            trayIcon.Dispose();
+            Environment.Exit(0);
+        }
+
+        private void OpenLog(object sender, EventArgs e)
+        {
+            string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OwcounterCompanion.log");
+            if (System.IO.File.Exists(logPath))
+            {
+                Process.Start(new ProcessStartInfo(logPath) { UseShellExecute = true });
+            }
+            else
+            {
+                MessageBox.Show("Log file not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OpenDashboard(object sender, EventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(DashboardUrl) { UseShellExecute = true });
         }
     }
 }
