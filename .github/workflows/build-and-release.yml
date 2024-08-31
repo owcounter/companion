@@ -55,12 +55,25 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
     
-    - name: Publish
-      run: dotnet publish OwcounterCompanion.csproj -c Release -o publish -r win-x64 --self-contained true
+    - name: Publish (Self-contained)
+      run: dotnet publish OwcounterCompanion.csproj -c Release -o publish-self-contained -r win-x64 --self-contained true
     
-    - name: Zip artifact
-      run: Compress-Archive -Path publish/* -DestinationPath OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}.zip
+    - name: Publish (Framework-dependent)
+      run: dotnet publish OwcounterCompanion.csproj -c Release -o publish-framework-dependent
     
+    - name: Zip artifacts
+      run: |
+        Compress-Archive -Path publish-self-contained/* -DestinationPath OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-self-contained.zip
+        Compress-Archive -Path publish-framework-dependent/* -DestinationPath OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-framework-dependent.zip
+    
+    - name: Get commit message
+      id: get_commit_message
+      run: |
+        $commit_message = git log --format=%B -n 1 ${{ github.sha }}
+        echo "COMMIT_MESSAGE<<EOF" >> $env:GITHUB_OUTPUT
+        echo "$commit_message" >> $env:GITHUB_OUTPUT
+        echo "EOF" >> $env:GITHUB_OUTPUT
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -69,17 +82,37 @@ jobs:
       with:
         tag_name: v${{ steps.increment_version.outputs.NEW_VERSION }}
         release_name: v${{ steps.increment_version.outputs.NEW_VERSION }}
+        body: |
+          This release includes two versions of OWCOUNTER Companion:
+          1. Self-contained: Includes .NET runtime. Larger file, but works out-of-the-box.
+          2. Framework-dependent: Smaller file, requires .NET 8.0 installed (https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
+          
+          Choose self-contained for convenience, framework-dependent for smaller download.
+
+          **Changes:**
+
+          `${{ steps.get_commit_message.outputs.COMMIT_MESSAGE }}`
         draft: false
         prerelease: false
     
-    - name: Upload Release Asset
+    - name: Upload Release Asset (Self-contained)
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}.zip
-        asset_name: OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}.zip
+        asset_path: ./OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-self-contained.zip
+        asset_name: OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-self-contained.zip
+        asset_content_type: application/zip
+    
+    - name: Upload Release Asset (Framework-dependent)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-framework-dependent.zip
+        asset_name: OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-framework-dependent.zip
         asset_content_type: application/zip
     
     - name: Commit version increment
