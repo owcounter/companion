@@ -61,7 +61,7 @@
             lblUsername.Name = "lblUsername";
             lblUsername.Size = new System.Drawing.Size(63, 15);
             lblUsername.TabIndex = 7;
-            lblUsername.Text = "Username:";
+            lblUsername.Text = "Email:";
             // 
             // lblPassword
             // 
