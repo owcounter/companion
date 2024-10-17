@@ -44,7 +44,7 @@
             // 
             // btnLogin
             // 
-            btnLogin.Location = new System.Drawing.Point(93, 148);
+            btnLogin.Location = new System.Drawing.Point(192, 148);
             btnLogin.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             btnLogin.Name = "btnLogin";
             btnLogin.Size = new System.Drawing.Size(88, 27);
@@ -75,7 +75,7 @@
             // 
             // btnSignUp
             // 
-            btnSignUp.Location = new System.Drawing.Point(192, 148);
+            btnSignUp.Location = new System.Drawing.Point(93, 148);
             btnSignUp.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             btnSignUp.Name = "btnSignUp";
             btnSignUp.Size = new System.Drawing.Size(88, 27);

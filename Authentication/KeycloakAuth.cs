@@ -28,7 +28,8 @@ namespace Owcounter.Authentication
                 {"grant_type", "password"},
                 {"client_id", clientId},
                 {"username", username},
-                {"password", password}
+                {"password", password},
+                {"scope", "openid offline_access"}
             };
 
             return await SendTokenRequest(tokenEndpoint, formData);
@@ -41,7 +42,8 @@ namespace Owcounter.Authentication
             {
                 {"grant_type", "refresh_token"},
                 {"client_id", clientId},
-                {"refresh_token", refreshToken}
+                {"refresh_token", refreshToken},
+                {"scope", "openid offline_access"}
             };
 
             return await SendTokenRequest(tokenEndpoint, formData);

@@ -84,8 +84,8 @@ jobs:
         release_name: v${{ steps.increment_version.outputs.NEW_VERSION }}
         body: |
           This release includes two versions of OWCOUNTER Companion:
-          1. Self-contained: Includes .NET runtime. Larger file, but works out-of-the-box.
-          2. Framework-dependent: Smaller file, requires .NET 8.0 installed (https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
+          1. Framework-dependent: Smaller file, requires .NET 8.0 installed (https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
+          2. Self-contained: Includes .NET runtime. Larger file, but works out-of-the-box.
           
           Choose self-contained for convenience, framework-dependent for smaller download.
 
