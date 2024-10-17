@@ -6,7 +6,7 @@
     <RootNamespace>Owcounter</RootNamespace>
     <AssemblyName>OWCounterCompanion</AssemblyName>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    <AssemblyVersion>1.0.6</AssemblyVersion>
+    <AssemblyVersion>1.0.7</AssemblyVersion>
     <Company>
     </Company>
     <Product>OwcounterCompanion</Product>
