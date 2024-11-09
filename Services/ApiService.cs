@@ -94,7 +94,7 @@ namespace Owcounter.Services
         public async Task<bool> SendScreenshotToServer(string screenshotBase64)
         {
             string formattedBase64 = $"data:image/jpeg;base64,{screenshotBase64}";
-            var input = new { screenshot_base64 = formattedBase64 };
+            var input = new { screenshot_base64 = formattedBase64, use_websocket = true };
             var content = new StringContent(JsonSerializer.Serialize(input), System.Text.Encoding.UTF8, "application/json");
 
             return await SendApiRequestWithRetry(() => httpClient.PostAsync("/process-screenshot", content));
