@@ -70,7 +70,7 @@ jobs:
       id: get_commit_message
       run: |
         $commit_message = (git log --format=%B -n 1 ${{ github.sha }}) -replace "`r?`n","`n"
-        $formatted_message = $commit_message -split "feat:" | Where-Object { $_ } | ForEach-Object { "- feat:$_`n" }
+        $formatted_message = $commit_message -split "`n" | Where-Object { $_ } | ForEach-Object { "- $_`n" }
         echo "COMMIT_MESSAGE<<EOF" >> $env:GITHUB_OUTPUT
         echo "$formatted_message" >> $env:GITHUB_OUTPUT
         echo "EOF" >> $env:GITHUB_OUTPUT
