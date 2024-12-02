@@ -6,7 +6,7 @@
     <RootNamespace>Owmeta</RootNamespace>
     <AssemblyName>OWMetaCompanion</AssemblyName>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    <AssemblyVersion>1.0.9</AssemblyVersion>
+    <AssemblyVersion>1.0.10</AssemblyVersion>
     <Company>
     </Company>
     <Product>OwmetaCompanion</Product>
