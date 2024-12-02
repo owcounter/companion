@@ -1,6 +1,6 @@
-﻿# OWCOUNTER Companion
+﻿# OWMETA Companion
 
-OWCOUNTER Companion is a desktop application that enhances your Overwatch 2 gameplay by providing real-time hero recommendations and team composition analysis. The app automatically monitors your in-game screenshots and sends them to the OWCOUNTER web dashboard for instant analysis.
+OWMETA Companion is a desktop application that enhances your Overwatch 2 gameplay by providing real-time hero recommendations and team composition analysis. The app automatically monitors your in-game screenshots and sends them to the OWMETA web dashboard for instant analysis.
 
 ## Features
 
@@ -13,15 +13,15 @@ OWCOUNTER Companion is a desktop application that enhances your Overwatch 2 game
 
 1. Download the latest release from [GitHub Releases](https://github.com/owcounter/companion/releases)
 2. Extract the ZIP file to your preferred location
-3. Run `OWCounterCompanion.exe`
-4. Log in with your OWCOUNTER account
+3. Run `OWMetaCompanion.exe`
+4. Log in with your OWMETA account
 
 ## Quick Start Guide
 
-1. Launch OWCOUNTER Companion and sign in
-2. Open the [OWCOUNTER dashboard](https://owcounter.com/dashboard) in your browser
+1. Launch OWMETA Companion and sign in
+2. Open the [OWMETA dashboard](https://owmeta.io/dashboard) in your browser
 3. Sign in to the website using the same credentials
-4. Visit the [Meta page](https://owcounter.com/meta) to customize hero relationships and preferences
+4. Visit the [Meta page](https://owmeta.io/meta) to customize hero relationships and preferences
    - Define counter relationships between heroes
    - Set hero synergies for optimal team compositions
    - Configure map-specific strengths and weaknesses
@@ -48,7 +48,7 @@ OWCOUNTER Companion is a desktop application that enhances your Overwatch 2 game
 - Ensure Overwatch 2 is running in Borderless Windowed or Fullscreen mode
 - Verify screenshot folder permissions
 - Check if antivirus is blocking the app
-- Review `OwcounterCompanion.log` for errors
+- Review `OwmetaCompanion.log` for errors
 
 ### Known Screenshot Issues
 - The default Print Screen key may activate cursor selection mode, requiring you to press Escape to continue playing
@@ -58,10 +58,10 @@ OWCOUNTER Companion is a desktop application that enhances your Overwatch 2 game
   - Wait until the next game, or restart Overwatch 2 to restore functionality
 
 ### Authentication Issues
-- Verify your OWCOUNTER credentials
+- Verify your OWMETA credentials
 - Check your internet connection
 - Try logging out and back in
-- Clear the token file by deleting `owcounter_oauth_token.json`
+- Clear the token file by deleting `owmeta_oauth_token.json`
 
 ## Configuration
 
@@ -97,8 +97,8 @@ git clone https://github.com/owcounter/companion.git
 ## Support
 
 - Join our [Discord server](https://discord.gg/nDA9CAkwbQ) for community support
-- Visit [OWCOUNTER](https://owcounter.com) for more information
-- Check out our [Meta page](https://owcounter.com/meta) for hero counter relationships, synergies, and map preferences
+- Visit [OWMETA](https://owmeta.io) for more information
+- Check out our [Meta page](https://owmeta.io/meta) for hero counter relationships, synergies, and map preferences
 - Report bugs through [GitHub Issues](https://github.com/owcounter/companion/issues)
 
 ## License

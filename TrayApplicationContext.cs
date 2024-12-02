@@ -1,11 +1,11 @@
-﻿using Owcounter.Authentication;
-using Owcounter.Services;
+﻿using Owmeta.Authentication;
+using Owmeta.Services;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Owcounter
+namespace Owmeta
 {
     public class TrayApplicationContext : ApplicationContext
     {
@@ -14,11 +14,11 @@ namespace Owcounter
         private readonly ScreenshotMonitoringService monitoringService;
         private readonly KeycloakAuth keycloakAuth;
 
-        private const string ApiBaseUrl = "https://api.owcounter.com";
-        private const string KeycloakUrl = "https://id.owcounter.com";
-        private const string Realm = "owcounter";
-        private const string TokenFileName = "owcounter_oauth_token.json";
-        private const string DashboardUrl = "https://owcounter.com/dashboard";
+        private const string ApiBaseUrl = "https://api.owmeta.io";
+        private const string KeycloakUrl = "https://id.owmeta.io";
+        private const string Realm = "owmeta";
+        private const string TokenFileName = "owmeta_oauth_token.json";
+        private const string DashboardUrl = "https://owmeta.io/dashboard";
 
         public TrayApplicationContext()
         {
@@ -51,8 +51,8 @@ namespace Owcounter
         {
             monitoringService.StartMonitoring();
             Logger.Log("Started monitoring Overwatch screenshots folder.");
-            trayIcon.SetToolTip("OWCOUNTER Companion - Monitoring");
-            trayIcon.ShowNotification("OWCOUNTER Companion", "Monitoring started. Open your dashboard for real-time insights!");
+            trayIcon.SetToolTip("OWMETA Companion - Monitoring");
+            trayIcon.ShowNotification("OWMETA Companion", "Monitoring started. Open your dashboard for real-time insights!");
         }
 
         private void ShowLoginForm()
@@ -86,11 +86,11 @@ namespace Owcounter
         private void ShowWelcomeMessage()
         {
             MessageBox.Show(
-                "Welcome to OWCOUNTER Companion!\n\n" +
+                "Welcome to OWMETA Companion!\n\n" +
                 "The app is now running in the background and will automatically upload screenshots.\n" +
-                "Open your OWCOUNTER dashboard to view real-time insights during gameplay.\n\n" +
+                "Open your OWMETA dashboard to view real-time insights during gameplay.\n\n" +
                 "Right-click the tray icon for more options.",
-                "OWCOUNTER Companion",
+                "OWMETA Companion",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information
             );
@@ -100,8 +100,8 @@ namespace Owcounter
         {
             await apiService.Logout();
             monitoringService.Dispose();
-            trayIcon.SetToolTip("OWCOUNTER Companion - Not logged in");
-            trayIcon.ShowNotification("OWCOUNTER Companion", "Logged out successfully.");
+            trayIcon.SetToolTip("OWMETA Companion - Not logged in");
+            trayIcon.ShowNotification("OWMETA Companion", "Logged out successfully.");
             ShowLoginForm();
         }
 
@@ -113,7 +113,7 @@ namespace Owcounter
 
         private void OpenLog(object sender, EventArgs e)
         {
-            string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OwcounterCompanion.log");
+            string logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "OwmetaCompanion.log");
             if (System.IO.File.Exists(logPath))
             {
                 Process.Start(new ProcessStartInfo(logPath) { UseShellExecute = true });

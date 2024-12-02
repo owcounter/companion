@@ -1,11 +1,11 @@
-﻿using Owcounter.Authentication;
+﻿using Owmeta.Authentication;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Owcounter.Services
+namespace Owmeta.Services
 {
     public class ApiService
     {
@@ -121,7 +121,7 @@ namespace Owcounter.Services
                     var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(errorContent);
                     if (errorResponse?.code == 2 && errorResponse?.message?.Contains("ERR_NO_WEBSOCKET_OPENED") == true)
                     {
-                        Logger.Log("Please refresh your Owcounter website to reconnect the WebSocket.");
+                        Logger.Log("Please refresh your Owmeta website to reconnect the WebSocket.");
                         return false;
                     }
 
