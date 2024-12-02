@@ -3,28 +3,28 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <RootNamespace>Owcounter</RootNamespace>
-    <AssemblyName>OWCounterCompanion</AssemblyName>
+    <RootNamespace>Owmeta</RootNamespace>
+    <AssemblyName>OWMetaCompanion</AssemblyName>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AssemblyVersion>1.0.9</AssemblyVersion>
     <Company>
     </Company>
-    <Product>OwcounterCompanion</Product>
+    <Product>OwmetaCompanion</Product>
     <Copyright>Copyright © 2024</Copyright>
     <Nullable>enable</Nullable>
     <LangVersion>12.0</LangVersion>
     <NoWarn>CS8981</NoWarn>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <ApplicationIcon>OWCounterCompanion.ico</ApplicationIcon>
+    <ApplicationIcon>OWMetaCompanion.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="OWCounterCompanion.ico" />
+    <Content Include="OWMetaCompanion.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="OWCounterCompanion.ico">
+    <None Update="OWMetaCompanion.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

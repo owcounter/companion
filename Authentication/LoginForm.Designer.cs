@@ -1,4 +1,4 @@
-﻿namespace Owcounter
+﻿namespace Owmeta
 {
     partial class LoginForm
     {
@@ -92,7 +92,7 @@
             lblInstructions.Name = "lblInstructions";
             lblInstructions.Size = new System.Drawing.Size(294, 30);
             lblInstructions.TabIndex = 2;
-            lblInstructions.Text = "Please use your OWCOUNTER account credentials.\nIf you don't have an account, click the Sign Up button.";
+            lblInstructions.Text = "Please use your OWMETA account credentials.\nIf you don't have an account, click the Sign Up button.";
             // 
             // chkShowPassword
             // 
@@ -121,7 +121,7 @@
             Controls.Add(lblUsername);
             Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             Name = "LoginForm";
-            Text = "OWCOUNTER Login";
+            Text = "OWMETA Login";
             ResumeLayout(false);
             PerformLayout();
         }

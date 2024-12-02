@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Owcounter.Authentication
+namespace Owmeta.Authentication
 {
     public class KeycloakAuth
     {

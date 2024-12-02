@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Owcounter
+namespace Owmeta
 {
     public class TrayIcon : IDisposable
     {
@@ -16,7 +16,7 @@ namespace Owcounter
         {
             trayIcon = new NotifyIcon
             {
-                Icon = new Icon(System.IO.Path.Combine(Application.StartupPath, "OWCounterCompanion.ico")),
+                Icon = new Icon(System.IO.Path.Combine(Application.StartupPath, "OWMetaCompanion.ico")),
                 Visible = true,
                 ContextMenuStrip = new ContextMenuStrip()
             };

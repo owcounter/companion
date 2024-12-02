@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Owcounter.Services
+namespace Owmeta.Services
 {
     public class ScreenshotMonitoringService : IDisposable
     {

@@ -22,7 +22,7 @@ jobs:
     - name: Get version
       id: get_version
       run: |
-        $xml = [Xml](Get-Content OwcounterCompanion.csproj)
+        $xml = [Xml](Get-Content OwmetaCompanion.csproj)
         $version = $xml.Project.PropertyGroup.AssemblyVersion
         if ([string]::IsNullOrEmpty($version)) {
           $version = "1.0.0"
@@ -40,31 +40,31 @@ jobs:
     
     - name: Update project version
       run: |
-        $file = 'OwcounterCompanion.csproj'
+        $file = 'OwmetaCompanion.csproj'
         $xml = [Xml](Get-Content $file)
         $propertyGroup = $xml.Project.PropertyGroup
         $propertyGroup.AssemblyVersion = "${{ steps.increment_version.outputs.NEW_VERSION }}"
         $xml.Save($file)
     
     - name: Restore dependencies
-      run: dotnet restore OwcounterCompanion.csproj
+      run: dotnet restore OwmetaCompanion.csproj
     
     - name: Build
-      run: dotnet build OwcounterCompanion.csproj --configuration Release --no-restore
+      run: dotnet build OwmetaCompanion.csproj --configuration Release --no-restore
     
     - name: Test
       run: dotnet test --no-restore --verbosity normal
     
     - name: Publish (Self-contained)
-      run: dotnet publish OwcounterCompanion.csproj -c Release -o publish-self-contained -r win-x64 --self-contained true
+      run: dotnet publish OwmetaCompanion.csproj -c Release -o publish-self-contained -r win-x64 --self-contained true
     
     - name: Publish (Framework-dependent)
-      run: dotnet publish OwcounterCompanion.csproj -c Release -o publish-framework-dependent
+      run: dotnet publish OwmetaCompanion.csproj -c Release -o publish-framework-dependent
     
     - name: Zip artifacts
       run: |
-        Compress-Archive -Path publish-self-contained/* -DestinationPath OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-self-contained.zip
-        Compress-Archive -Path publish-framework-dependent/* -DestinationPath OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-framework-dependent.zip
+        Compress-Archive -Path publish-self-contained/* -DestinationPath OWMetaCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-self-contained.zip
+        Compress-Archive -Path publish-framework-dependent/* -DestinationPath OWMetaCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-framework-dependent.zip
     
     - name: Get commit message
       id: get_commit_message
@@ -84,7 +84,7 @@ jobs:
         tag_name: v${{ steps.increment_version.outputs.NEW_VERSION }}
         release_name: v${{ steps.increment_version.outputs.NEW_VERSION }}
         body: |
-          This release includes two versions of OWCOUNTER Companion:
+          This release includes two versions of OWMETA Companion:
           1. Framework-dependent: Smaller file, requires .NET 8.0 installed (https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
           2. Self-contained: Includes .NET runtime. Larger file, but works out-of-the-box.
           
@@ -101,8 +101,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-self-contained.zip
-        asset_name: OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-self-contained.zip
+        asset_path: ./OWMetaCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-self-contained.zip
+        asset_name: OWMetaCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-self-contained.zip
         asset_content_type: application/zip
     
     - name: Upload Release Asset (Framework-dependent)
@@ -111,8 +111,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-framework-dependent.zip
-        asset_name: OWCounterCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-framework-dependent.zip
+        asset_path: ./OWMetaCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-framework-dependent.zip
+        asset_name: OWMetaCompanion-v${{ steps.increment_version.outputs.NEW_VERSION }}-framework-dependent.zip
         asset_content_type: application/zip
     
     - name: Commit version increment
